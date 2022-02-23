@@ -69,10 +69,15 @@ void FisheyeFlattenHandler::imgs_callback(double t, const cv::Mat & img1, const 
     TicToc t_f;
 
     if (USE_GPU) {
+        std::cout << "USE_GPU" << std::endl;
         // is_color = true;
         if (is_color) {
+            std::cout << "is color" << std::endl;
+
             fisheye_up_imgs_cuda = fisheys_undists[0].undist_all_cuda(img1, true, mask_up); 
             fisheye_down_imgs_cuda = fisheys_undists[1].undist_all_cuda(img2, true, mask_down);
+
+           
             fisheye_up_imgs_cuda_gray.clear();
             fisheye_down_imgs_cuda_gray.clear();
 
@@ -94,8 +99,31 @@ void FisheyeFlattenHandler::imgs_callback(double t, const cv::Mat & img1, const 
                 fisheye_down_imgs_cuda_gray.push_back(gray);
             }
         } else {
+            std::cout << "is gray" << std::endl;
+
             fisheye_up_imgs_cuda_gray = fisheys_undists[0].undist_all_cuda(img1, false, mask_up); 
             fisheye_down_imgs_cuda_gray = fisheys_undists[1].undist_all_cuda(img2, false, mask_down);
+
+            // int size = fisheye_up_imgs_cuda_gray.size();
+
+            // auto tmpImg = fisheye_down_imgs_cuda_gray[1];
+            // fisheye_down_imgs_cuda_gray[1] = fisheye_down_imgs_cuda_gray[3];
+            // fisheye_down_imgs_cuda_gray[3] = tmpImg;
+
+            // for(int i =0; i < size; ++i)
+            // {
+            //     std::cout << "image : " << i << std::endl;
+            //     cv::Mat mat1, mat2;
+            //     if (fisheye_up_imgs_cuda_gray[i].size().width <= 0)
+            //         continue;
+            //     fisheye_up_imgs_cuda_gray[i].download(mat1);
+            //     fisheye_down_imgs_cuda_gray[i].download(mat2);
+
+            //     cv::imshow("up", mat1);
+            //     cv::imshow("down", mat2);
+            //     cv::waitKey();
+                
+            // }
         }
 
         if (!is_blank_init) {
@@ -110,7 +138,11 @@ void FisheyeFlattenHandler::imgs_callback(double t, const cv::Mat & img1, const 
             buf_lock.unlock();
         }
     } else {
+        std::cout << "NOT USE_GPU" << std::endl;
+
         if (is_color) {
+            std::cout << "is color" << std::endl;
+
             fisheys_undists[0].stereo_flatten(img1, img2, &fisheys_undists[1], 
                 fisheye_up_imgs, fisheye_down_imgs, true, 
                 enable_up_top, enable_rear_side, enable_down_top, enable_rear_side);
@@ -132,6 +164,8 @@ void FisheyeFlattenHandler::imgs_callback(double t, const cv::Mat & img1, const 
                 fisheye_down_imgs_gray.push_back(gray);
             }
         } else {
+            std::cout << "is gray" << std::endl;
+
             fisheys_undists[0].stereo_flatten(img1, img2, &fisheys_undists[1], 
                 fisheye_up_imgs_gray, fisheye_down_imgs_gray, false, 
                 enable_up_top, enable_rear_side, enable_down_top, enable_rear_side);

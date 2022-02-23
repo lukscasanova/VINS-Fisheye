@@ -220,6 +220,7 @@ void DepthCamManager::update_depth_image(int direction, cv::cuda::GpuMat _up_fro
     cv::cuda::resize(_up_front, up_front, cv::Size(), downsample_ratio, downsample_ratio);
     cv::cuda::resize(_down_front, down_front, cv::Size(), downsample_ratio, downsample_ratio);
 
+    ROS_INFO("update depth image");
     if(ENABLE_PERF_OUTPUT) {
         ROS_INFO("Up to Resize cost %f", tic_resize.toc());
     }

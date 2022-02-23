@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(vins)
 
-set(CMAKE_BUILD_TYPE "Release")
-set(CMAKE_CXX_FLAGS "-std=c++14 -fopenmp --coverage")
+set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+set(CMAKE_CXX_FLAGS "-std=c++14 -fopenmp")
 #-DEIGEN_USE_MKL_ALL")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -ggdb")
 
 set(ENABLE_BACKWARD false)
 set(ENABLE_VWORKS false)
@@ -152,12 +152,15 @@ add_library(estimator_lib SHARED
 add_library(fisheyeNode_lib SHARED
      src/fisheyeNode.cpp)
 
+
+message("catkin libraries" ${catkin_LIBRARIES})
+
 target_link_libraries(vins_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES} ${LIBDW})
 target_link_libraries(vins_params_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES} ${LIBDW})
 add_dependencies(vins_lib vins_generate_messages_cpp)
 target_link_libraries(stereo_depth ${catkin_LIBRARIES} ${OpenCV_LIBS} ${VisionWorks_LIBRARIES} ${LIBSGM} ${LIBDW})
 target_link_libraries(vins_frontend ${catkin_LIBRARIES} ${OpenCV_LIBS} ${VisionWorks_LIBRARIES} ${LIBDW} OpenMP::OpenMP_CXX)
-target_link_libraries(estimator_lib vins_params_lib vins_lib stereo_depth ${catkin_LIBRARIES} ${OpenCV_LIBS} ${VisionWorks_LIBRARIES} ${LIBDW})
+target_link_libraries(estimator_lib vins_frontend vins_params_lib vins_lib stereo_depth ${catkin_LIBRARIES} ${OpenCV_LIBS} ${VisionWorks_LIBRARIES} ${LIBDW})
 target_link_libraries(fisheyeNode_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${VisionWorks_LIBRARIES} ${LIBDW} OpenMP::OpenMP_CXX)
 
 
@@ -165,7 +168,7 @@ target_link_libraries(fisheyeNode_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Visio
 # target_link_libraries(vins_node vins_lib estimator_lib vins_frontend stereo_depth vins_factors_lib vins_params_lib)
 
 add_executable(vins_node src/rosNodeFisheye.cpp)
-target_link_libraries(vins_node vins_lib fisheyeNode_lib estimator_lib vins_frontend stereo_depth vins_factors_lib vins_params_lib)
+target_link_libraries(vins_node vins_lib fisheyeNode_lib vins_frontend estimator_lib  stereo_depth vins_factors_lib vins_params_lib)
 
-add_library(vins_nodelet_lib src/rosNodelet.cpp)
-target_link_libraries(vins_nodelet_lib vins_lib fisheyeNode_lib estimator_lib vins_frontend stereo_depth vins_factors_lib vins_params_lib OpenMP::OpenMP_CXX)
+# add_library(vins_nodelet_lib src/rosNodelet.cpp)
+# target_link_libraries(vins_nodelet_lib vins_lib fisheyeNode_lib estimator_lib vins_frontend stereo_depth vins_factors_lib vins_params_lib OpenMP::OpenMP_CXX)

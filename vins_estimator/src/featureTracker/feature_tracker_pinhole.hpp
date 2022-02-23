@@ -50,7 +50,7 @@ protected:
 
 };
 
-
+template class PinholeFeatureTracker<cv::cuda::GpuMat>;
 class PinholeFeatureTrackerCuda: public PinholeFeatureTracker<cv::cuda::GpuMat> {
     protected:
     cv::cuda::GpuMat prev_gpu_img;

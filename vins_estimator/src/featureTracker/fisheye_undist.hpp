@@ -267,10 +267,10 @@ public:
         maps.push_back(genOneUndistMap(0, p_cam, t[0], imgWidth, imgWidth, f_center));
 
         Eigen::Quaterniond t0 = t[0];
-        if (cam_id == 1) {
-            std::cout << "Is camera 1 will invert T" << std::endl;
-            t0 = Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX());
-        };
+        // if (cam_id == 1) {
+        //     std::cout << "Is camera 1 will invert T" << std::endl;
+        //     t0 = Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX());
+        // };
 
         if (sideImgHeight > 0)
         {
